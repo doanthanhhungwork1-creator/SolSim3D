@@ -24,18 +24,23 @@
 
         /* NÚT SÁCH HƯỚNG DẪN CỐ ĐỊNH TRÊN TIÊU ĐỀ SIDEBAR */
         .btn-readme-trigger {
-            background: none;
-            border: none;
+            background: rgba(241, 196, 15, 0.1);
+            border: 1px solid rgba(241, 196, 15, 0.3);
             color: #f1c40f;
-            font-size: 1.4em;
+            font-size: 1.1em;
             cursor: pointer;
-            transition: transform 0.2s, color 0.2s;
-            display: flex;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: inline-flex;
             align-items: center;
+            gap: 5px;
         }
         .btn-readme-trigger:hover {
-            transform: scale(1.15);
-            color: #f39c12;
+            transform: scale(1.05);
+            background: rgba(241, 196, 15, 0.25);
+            color: #fff;
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.4);
         }
 
         .sidebar { 
@@ -44,7 +49,7 @@
             right: 20px;
             width: 420px; 
             max-height: calc(100vh - 40px);
-            background: rgba(30, 30, 38, 0.65); 
+            background: rgba(30, 30, 38, 0.75); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -57,14 +62,14 @@
             overflow-y: auto;
             overflow-x: hidden;
             transform-origin: right top;
-            transform: rotateY(-20deg) rotateX(2deg) scale(0.8); 
+            transform: rotateY(-15deg) rotateX(2deg) scale(0.9); 
             transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         .sidebar:hover {
             transform: rotateY(0deg) rotateX(0deg) scale(1);
-            background: rgba(35, 35, 45, 0.85);
-            border-color: rgba(52, 152, 219, 0.4);
+            background: rgba(35, 35, 45, 0.9);
+            border-color: rgba(52, 152, 219, 0.5);
             box-shadow: -15px 20px 40px rgba(0,0,0,0.8);
         }
 
@@ -76,22 +81,22 @@
         #readmeModal {
             position: absolute;
             top: 5%; left: 5%;
-            width: 50%; height: 80%;
-            background: rgba(20, 20, 27, 0.88);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.12);
+            width: 55%; height: 85%;
+            background: rgba(20, 20, 27, 0.92);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.15);
             border-radius: 16px;
             z-index: 100;
             padding: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-            display: none; /* Ẩn mặc định */
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            display: none; 
             flex-direction: column;
             animation: fadeIn 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
+            from { opacity: 0; transform: scale(0.97); }
             to { opacity: 1; transform: scale(1); }
         }
 
@@ -99,44 +104,43 @@
             flex: 1;
             overflow-y: auto;
             padding-right: 15px;
-            line-height: 1.6;
+            line-height: 1.7;
             color: #e0e0e5;
-            font-size: 0.95em;
+            font-size: 0.98em;
         }
 
-        /* Định dạng các thẻ Markdown sinh ra từ file README */
-        #readmeContent h1, #readmeContent h2, #readmeContent h3 { color: #2ecc71; margin-top: 20px; }
-        #readmeContent h1 { border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
-        #readmeContent code { background: rgba(0,0,0,0.4); padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #e74c3c; }
-        #readmeContent pre { background: #09090d; padding: 15px; border-radius: 8px; overflow-x: auto; border: 1px solid #222; }
+        /* Cấu trúc Markdown */
+        #readmeContent h1, #readmeContent h2, #readmeContent h3 { color: #2ecc71; margin-top: 22px; font-weight: 600; }
+        #readmeContent h1 { border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; font-size: 1.6em; }
+        #readmeContent code { background: rgba(231, 76, 60, 0.15); padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #e74c3c; font-size: 0.9em; }
+        #readmeContent pre { background: #050508; padding: 15px; border-radius: 8px; overflow-x: auto; border: 1px solid rgba(255,255,255,0.05); }
         #readmeContent pre code { color: #3498db; background: none; padding: 0; }
-        #readmeContent ul, #readmeContent ol { padding-left: 20px; }
-        #readmeContent li { margin-bottom: 6px; }
+        #readmeContent ul, #readmeContent ol { padding-left: 22px; }
+        #readmeContent li { margin-bottom: 8px; }
 
         .close-readme {
             position: absolute;
-            top: 15px; right: 20px;
+            top: 20px; right: 25px;
             background: #e74c3c;
             color: white; border: none;
-            padding: 5px 12px; border-radius: 4px;
+            padding: 6px 14px; border-radius: 6px;
             cursor: pointer; font-weight: bold;
             transition: background 0.2s;
         }
         .close-readme:hover { background: #c0392b; }
 
         .scrollable-segments-wrapper {
-            max-height: 400px; 
+            max-height: 320px; 
             overflow-y: auto;
             padding-right: 4px;
             margin-bottom: 10px;
             border-radius: 6px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.25);
             padding: 6px;
         }
         .scrollable-segments-wrapper::-webkit-scrollbar { width: 6px; }
-        .scrollable-segments-wrapper::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 3px; }
+        .scrollable-segments-wrapper::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
         .scrollable-segments-wrapper::-webkit-scrollbar-thumb { background: rgba(52, 152, 219, 0.4); border-radius: 3px; }
-        .scrollable-segments-wrapper::-webkit-scrollbar-thumb:hover { background: #3498db; }
 
         .input-group { margin-bottom: 15px; background: rgba(50, 50, 56, 0.4); padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); }
         .segment-row { display: flex; align-items: center; gap: 6px; background: rgba(45, 45, 51, 0.6); padding: 8px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #3498db; }
@@ -144,28 +148,22 @@
         label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 0.88em; color: #bdc3c7; }
         input[type="range"] { width: 100%; accent-color: #2ecc71; background: rgba(0,0,0,0.3); height: 5px; border-radius: 3px; }
         input[type="number"], select { background: #141418; color: #fff; border: 1px solid #3e3e44; padding: 5px 8px; border-radius: 4px; font-size: 0.9em; }
-        input[type="number"]:focus, select:focus { border-color: #3498db; outline: none; }
         span.val { color: #f39c12; font-weight: bold; float: right; }
         h1, h2, h3 { color: #2ecc71; margin-top: 0; }
-        h1 { font-size: 1.25em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        h2 { font-size: 1.05em; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { font-size: 1.25em; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-bottom: 15px; }
+        h2 { font-size: 1.05em; margin-bottom: 12px; }
         hr { border: 0; height: 1px; background: rgba(255,255,255,0.1); margin: 15px 0; }
         .btn { background: #3498db; color: white; border: none; padding: 9px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; text-align: center; font-size: 0.9em; transition: background 0.2s; }
         .btn:hover { background: #2980b9; }
         .btn-del { background: #e74c3c; padding: 4px 8px; font-size: 0.8em; width: auto; border-radius: 4px; }
         .btn-del:hover { background: #c0392b; }
         .result-panel { background: rgba(30, 61, 47, 0.5); padding: 14px; border-radius: 8px; border-left: 4px solid #2ecc71; margin-top: 5px; }
-        .result-panel p { margin: 6px 0; font-size: 0.92em; }
-        .seg-num { font-weight: bold; color: #3498db; min-width: 55px; }
         
         #thermalTooltip {
             position: absolute; display: none; background: rgba(20, 20, 25, 0.95);
             color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 0.85em;
-            pointer-events: none; border: 1px solid #4f4f56; box-shadow: 0 4px 15px rgba(0,0,0,0.6);
-            z-index: 100; line-height: 1.5;
+            pointer-events: none; border: 1px solid #4f4f56; z-index: 100;
         }
-        .tt-title { font-weight: bold; color: #2ecc71; border-bottom: 1px solid #333; padding-bottom: 4px; margin-bottom: 6px; }
-        .tt-val { color: #f1c40f; font-weight: bold; }
     </style>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -178,13 +176,15 @@
 
     <div id="readmeModal">
         <button class="close-readme" onclick="toggleReadme(false)">Đóng ✕</button>
-        <div id="readmeContent">Đang tải tài liệu hướng dẫn...</div>
+        <div id="readmeContent">Đang tải tài liệu hướng dẫn từ hệ thống...</div>
     </div>
 
     <div class="sidebar">
-        <h1 style="display:flex; justify-content:space-between; align-items:center;">
-            <span>MÔ PHỎNG HỆ FEED HORN 3D</span>
-            <button class="btn-readme-trigger" onclick="openAndFetchReadme()" title="Xem sách hướng dẫn thiết kế">📖</button>
+        <h1 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <span style="font-size:0.9em;">MÔ PHỎNG FEED HORN 3D</span>
+            <button class="btn-readme-trigger" onclick="openAndFetchReadme()" title="Xem hướng dẫn sử dụng">
+                <span>📖</span> <span style="font-size:0.8em; font-family:sans-serif;">Hướng Dẫn</span>
+            </button>
         </h1>
         
         <div class="input-group">
@@ -213,7 +213,6 @@
 
         <div class="input-group">
             <h2>2. Tuyến Đường Ống Trong Nhà</h2>
-            
             <div class="scrollable-segments-wrapper">
                 <div id="segmentsContainer">
                     <div class="segment-row locked">
@@ -248,16 +247,16 @@
             <div id="tankControls" style="display:none; padding-top: 5px;">
                 <div style="margin-bottom: 8px; display:flex; gap: 10px;">
                     <div>
-                        <label>Chiều Dài (X):</label>
-                        <input type="number" id="tankL" min="0.1" max="50" step="0.1" value="5.0" style="width:70px;"> <span style="font-size:0.8em; color:#aaa;">m</span>
+                        <label>Chiều Dài:</label>
+                        <input type="number" id="tankL" min="0.1" max="50" step="0.1" value="5.0" style="width:65px;"> m
                     </div>
                     <div>
-                        <label>Chiều Cao (Y):</label>
-                        <input type="number" id="tankH" min="0.1" max="30" step="0.1" value="2.5" style="width:70px;"> <span style="font-size:0.8em; color:#aaa;">m</span>
+                        <label>Chiều Cao:</label>
+                        <input type="number" id="tankH" min="0.1" max="30" step="0.1" value="2.5" style="width:65px;"> m
                     </div>
                     <div>
-                        <label>Chiều Rộng (Z):</label>
-                        <input type="number" id="tankW" min="0.1" max="10" step="0.1" value="1.5" style="width:70px;"> <span style="font-size:0.8em; color:#aaa;">m</span>
+                        <label>Chiều Rộng:</label>
+                        <input type="number" id="tankW" min="0.1" max="10" step="0.1" value="1.5" style="width:65px;"> m
                     </div>
                 </div>
             </div>
@@ -274,7 +273,7 @@
             <div id="tankResults" style="display:none; border-top: 1px dashed rgba(255,255,255,0.15); margin-top:10px; padding-top:10px;">
                 <p>Thể tích nước trong bể: <span id="res_tankVol" style="color:#3498db; font-weight:bold;">0</span> Lít</p>
                 <p>Nhiệt lượng hấp thụ vào bể: <span id="res_tankPower" style="color:#e67e22; font-weight:bold;">0</span> W</p>
-                <p>Thời gian nước đạt độ sôi (100°C): <span id="res_timeToBoil" style="color:#2ecc71; font-weight:bold;">Không sôi</span></p>
+                <p>Thời gian đạt độ sôi: <span id="res_timeToBoil" style="color:#2ecc71; font-weight:bold;">Không sôi</span></p>
             </div>
         </div>
     </div>
@@ -298,7 +297,6 @@
         const mouse = new THREE.Vector2();
         const tooltip = document.getElementById('thermalTooltip');
 
-        // LOGIC TRUY XUẤT VÀ HIỂN THỊ NỘI DUNG TỪ FILE README.MD
         function toggleReadme(show) {
             const modal = document.getElementById('readmeModal');
             modal.style.display = show ? 'flex' : 'none';
@@ -309,19 +307,18 @@
             const contentDiv = document.getElementById('readmeContent');
             contentDiv.innerHTML = "<i>Đang kết nối hệ thống dữ liệu để tải Readme.md...</i>";
 
-            // Đọc file nằm cùng thư mục cục bộ của máy chủ hoặc Github Pages
             fetch('./README.md')
                 .then(response => {
-                    if (!response.ok) throw new Error("Không tìm thấy file README.md trong cùng thư mục.");
+                    if (!response.ok) throw new Error("Không tìm thấy file README.md.");
                     return response.text();
                 })
                 .then(markdownText => {
-                    // Dùng thư viện marked để chuyển mã Markdown thô sang cấu trúc HTML
-                    contentDiv.innerHTML = marked.parse(markdownText);
+                    // Xử lý chuỗi an toàn, loại bỏ ký tự latex toán học phức tạp gây crash trình duyệt
+                    let cleanMarkdown = markdownText.replace(/\$\$/g, '').replace(/\\text\{f\}/g, 'f');
+                    contentDiv.innerHTML = marked.parse(cleanMarkdown);
                 })
                 .catch(error => {
-                    contentDiv.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">Lỗi hệ thống:</span> ${error.message}<br><br>
-                    <small>Mẹo: Đảm bảo file README.md được viết đúng tên hoa thường và nằm cùng thư mục với file index này trên repo GitHub của anh.</small>`;
+                    contentDiv.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">Lỗi tải tài liệu:</span> Có thể file README.md chưa nằm cùng thư mục hoặc viết sai ký tự hoa thường trên Repo GitHub.`;
                 });
         }
 
@@ -336,7 +333,6 @@
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.shadowMap.enabled = true;
-            renderer.outputEncoding = THREE.sRGBEncoding; 
             container.appendChild(renderer.domElement);
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -349,7 +345,6 @@
 
             const mainLight = new THREE.DirectionalLight(0xffffff, 1.3); 
             mainLight.position.set(10, 18, 12);
-            mainLight.castShadow = true;
             scene.add(mainLight);
 
             const gridHelper = new THREE.GridHelper(30, 30, 0x444444, 0x222222);
@@ -408,21 +403,11 @@
                 tooltip.style.top = (event.clientY - 15) + 'px';
 
                 if (hitObj.userData.type === 'pipe') {
-                    tooltip.innerHTML = `
-                        <div class="tt-title">${hitObj.userData.name}</div>
-                        Chiều dài: <span class="tt-val">${hitObj.userData.length.toFixed(1)} m</span><br>
-                        Nhiệt độ vỏ ống: <span class="tt-val">${Math.round(hitObj.userData.tempLoss)} °C</span>
-                    `;
+                    tooltip.innerHTML = `<strong>${hitObj.userData.name}</strong><br>Dài: ${hitObj.userData.length.toFixed(1)} m<br>Nhiệt độ: ${Math.round(hitObj.userData.tempLoss)} °C`;
                 } else if (hitObj.userData.type === 'mirror') {
-                    tooltip.innerHTML = `
-                        <div class="tt-title">${hitObj.userData.name}</div>
-                        Nhiệt độ lõi gương: <span class="tt-val">${Math.round(hitObj.userData.temperature)} °C</span>
-                    `;
+                    tooltip.innerHTML = `<strong>Gương góc</strong><br>Nhiệt độ: ${Math.round(hitObj.userData.temperature)} °C`;
                 } else if (hitObj.userData.type === 'dish') {
-                    tooltip.innerHTML = `
-                        <div class="tt-title">Đĩa Parabol Hội Tụ Năng Lượng</div>
-                        Diện tích: <span class="tt-val">${hitObj.userData.area.toFixed(2)} m²</span>
-                    `;
+                    tooltip.innerHTML = `<strong>Đĩa Parabol</strong><br>Diện tích hiệu dụng: ${hitObj.userData.area.toFixed(2)} m²`;
                 }
             } else {
                 tooltip.style.display = 'none';
@@ -482,11 +467,8 @@
             obj.children.forEach(child => disposeHierarchy(child));
             if (obj.geometry) obj.geometry.dispose();
             if (obj.material) {
-                if (Array.isArray(obj.material)) {
-                    obj.material.forEach(mat => mat.dispose());
-                } else {
-                    obj.material.dispose();
-                }
+                if (Array.isArray(obj.material)) obj.material.forEach(mat => mat.dispose());
+                else obj.material.dispose();
             }
         }
 
@@ -504,11 +486,8 @@
 
         function createParabolicGeometry(dOuter, dInner, f, segments = 40) {
             const geometry = new THREE.BufferGeometry();
-            const vertices = [];
-            const indices = [];
-            const uvs = [];
-            const rMin = dInner / 2;
-            const rMax = dOuter / 2;
+            const vertices = []; const indices = []; const uvs = [];
+            const rMin = dInner / 2; const rMax = dOuter / 2;
 
             for (let i = 0; i <= segments; i++) {
                 const r = rMin + (i / segments) * (rMax - rMin);
@@ -521,16 +500,14 @@
             }
             for (let i = 0; i < segments; i++) {
                 for (let j = 0; j < segments; j++) {
-                    const row1 = i * (segments + 1);
-                    const row2 = (i + 1) * (segments + 1);
+                    const row1 = i * (segments + 1); const row2 = (i + 1) * (segments + 1);
                     indices.push(row1 + j, row2 + j, row1 + j + 1);
                     indices.push(row2 + j, row2 + j + 1, row1 + j + 1);
                 }
             }
             geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
             geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-            geometry.setIndex(indices);
-            geometry.computeVertexNormals();
+            geometry.setIndex(indices); geometry.computeVertexNormals();
             return geometry;
         }
 
@@ -610,9 +587,7 @@
             }
 
             const P_in = I_solar * A_eff * 0.88; 
-            let currentPower = P_in;
-            let totalLength = 0;
-            let totalMirrors = 0;
+            let currentPower = P_in; let totalLength = 0; let totalMirrors = 0;
             const T_amb = 30; const T_water = 30; 
 
             for (let i = 0; i < points.length - 1; i++) {
@@ -632,7 +607,7 @@
                     cylinderGeom.translate(0, distance / 2, 0); cylinderGeom.rotateX(Math.PI / 2);
                     const cylinderMesh = new THREE.Mesh(cylinderGeom, new THREE.MeshStandardMaterial({ color: pipeColor, metalness: 0.95, roughness: 0.15 }));
                     cylinderMesh.position.copy(pStart); cylinderMesh.lookAt(pEnd);
-                    cylinderMesh.userData = { type: 'pipe', name: `Đoạn ống thứ ${i}`, length: distance, tempLoss: T_pipe_wall };
+                    cylinderMesh.userData = { type: 'pipe', name: `Đoạn ống ${i}`, length: distance, tempLoss: T_pipe_wall };
                     scene.add(cylinderMesh); pipeMeshes.push(cylinderMesh);
                 }
 
@@ -647,14 +622,14 @@
                         const normal = new THREE.Vector3().subVectors(vIn, vOut).normalize();
                         const mirrorMesh = new THREE.Mesh(new THREE.CircleGeometry(r_pipe_m * Math.sqrt(2), 32), new THREE.MeshStandardMaterial({ color: mirrorColor, side: THREE.DoubleSide }));
                         mirrorMesh.position.copy(points[i]); mirrorMesh.lookAt(new THREE.Vector3().addVectors(points[i], normal));
-                        mirrorMesh.userData = { type: 'mirror', name: `Gương xoay góc`, temperature: T_mirror };
+                        mirrorMesh.userData = { type: 'mirror', temperature: T_mirror };
                         scene.add(mirrorMesh); mirrorMeshes.push(mirrorMesh);
                     }
                 }
             }
 
             if (tankEnabled) {
-                tankMesh = new THREE.Mesh(new THREE.BoxGeometry(tankL, tankH, tankW), new THREE.MeshStandardMaterial({ color: 0x3498db, transparent: true, opacity: 0.4 }));
+                tankMesh = new THREE.Mesh(new THREE.BoxGeometry(tankL, tankH, tankW), new THREE.MeshStandardMaterial({ color: 0x3498db, transparent: true, opacity: 0.35 }));
                 tankMesh.position.set((points[2].x + points[3].x)/2, (points[2].y - 0.3) + tankH/2, (points[2].z + points[3].z)/2);
                 scene.add(tankMesh);
                 document.getElementById('res_tankVol').innerText = Math.round(tankL * tankH * tankW * 1000) + " Lít";
