@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Hệ Thống Thiết Kế Bếp Mặt Trời 3D Kỹ Thuật - Giao Diện Lập Thể</title>
-<style>
+    <style>
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
             margin: 0; 
@@ -109,7 +109,7 @@
             font-size: 0.98em;
         }
 
-        /* Cấu trúc Markdown */
+        /* Cấu trúc định dạng hiển thị Markdown bên trong tài liệu */
         #readmeContent h1, #readmeContent h2, #readmeContent h3 { color: #2ecc71; margin-top: 22px; font-weight: 600; }
         #readmeContent h1 { border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 8px; font-size: 1.6em; }
         #readmeContent code { background: rgba(231, 76, 60, 0.15); padding: 2px 6px; border-radius: 4px; font-family: monospace; color: #e74c3c; font-size: 0.9em; }
@@ -165,15 +165,27 @@
             pointer-events: none; border: 1px solid #4f4f56; z-index: 100;
         }
     </style>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
     <div id="canvas3d"></div>
 
+    <div id="readmeModal">
+        <button class="close-readme" onclick="toggleReadme(false)">Đóng ✕</button>
+        <div id="readmeContent">Đang tải tài liệu hướng dẫn từ hệ thống...</div>
+    </div>
+
     <div class="sidebar">
-        <h1>MÔ PHỎNG HỆ BẾP NĂNG LƯỢNG MẶT TRỜI 3D</h1>
+        <h1 style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <span style="font-size:0.9em;">MÔ PHỎNG FEED HORN 3D</span>
+            <button class="btn-readme-trigger" onclick="openAndFetchReadme()" title="Xem hướng dẫn sử dụng">
+                <span>📖</span> <span style="font-size:0.8em; font-family:sans-serif;">Hướng Dẫn</span>
+            </button>
+        </h1>
         
         <div class="input-group">
             <h2>1. Hình Học Đĩa & Tiêu Điểm F</h2>
@@ -201,7 +213,6 @@
 
         <div class="input-group">
             <h2>2. Tuyến Đường Ống Trong Nhà</h2>
-            
             <div class="scrollable-segments-wrapper">
                 <div id="segmentsContainer">
                     <div class="segment-row locked">
@@ -236,21 +247,17 @@
             <div id="tankControls" style="display:none; padding-top: 5px;">
                 <div style="margin-bottom: 8px; display:flex; gap: 10px;">
                     <div>
-                        <label>Chiều Dài (X):</label>
-                        <input type="number" id="tankL" min="0.1" max="50" step="0.1" value="5.0" style="width:70px;"> <span style="font-size:0.8em; color:#aaa;">m</span>
-                        <div class="hint-text">Min tùy biến: 0.1m</div>
+                        <label>Chiều Dài:</label>
+                        <input type="number" id="tankL" min="0.1" max="50" step="0.1" value="5.0" style="width:65px;"> m
                     </div>
                     <div>
-                        <label>Chiều Cao (Y):</label>
-                        <input type="number" id="tankH" min="0.1" max="30" step="0.1" value="2.5" style="width:70px;"> <span style="font-size:0.8em; color:#aaa;">m</span>
+                        <label>Chiều Cao:</label>
+                        <input type="number" id="tankH" min="0.1" max="30" step="0.1" value="2.5" style="width:65px;"> m
                     </div>
                     <div>
-                        <label>Chiều Rộng (Z):</label>
-                        <input type="number" id="tankW" min="0.1" max="10" step="0.1" value="1.5" style="width:70px;"> <span style="font-size:0.8em; color:#aaa;">m</span>
+                        <label>Chiều Rộng:</label>
+                        <input type="number" id="tankW" min="0.1" max="10" step="0.1" value="1.5" style="width:65px;"> m
                     </div>
-                </div>
-                <div style="font-size:0.8em; background:rgba(0,0,0,0.4); padding:6px; border-radius:4px; border-left:2px solid #2ecc71; line-height: 1.4;">
-                    💡 Định vị: Tâm đáy trùng tâm Đoạn 2. Cao đáy hạ sâu 30cm tính từ Đoạn 2.
                 </div>
             </div>
         </div>
@@ -266,7 +273,7 @@
             <div id="tankResults" style="display:none; border-top: 1px dashed rgba(255,255,255,0.15); margin-top:10px; padding-top:10px;">
                 <p>Thể tích nước trong bể: <span id="res_tankVol" style="color:#3498db; font-weight:bold;">0</span> Lít</p>
                 <p>Nhiệt lượng hấp thụ vào bể: <span id="res_tankPower" style="color:#e67e22; font-weight:bold;">0</span> W</p>
-                <p>Thời gian nước đạt độ sôi (100°C): <span id="res_timeToBoil" style="color:#2ecc71; font-weight:bold;">Không sôi</span></p>
+                <p>Thời gian đạt độ sôi: <span id="res_timeToBoil" style="color:#2ecc71; font-weight:bold;">Không sôi</span></p>
             </div>
         </div>
     </div>
@@ -290,6 +297,31 @@
         const mouse = new THREE.Vector2();
         const tooltip = document.getElementById('thermalTooltip');
 
+        function toggleReadme(show) {
+            const modal = document.getElementById('readmeModal');
+            modal.style.display = show ? 'flex' : 'none';
+        }
+
+        function openAndFetchReadme() {
+            toggleReadme(true);
+            const contentDiv = document.getElementById('readmeContent');
+            contentDiv.innerHTML = "<i>Đang kết nối hệ thống dữ liệu để tải Readme.md...</i>";
+
+            fetch('./README.md')
+                .then(response => {
+                    if (!response.ok) throw new Error("Không tìm thấy file README.md.");
+                    return response.text();
+                })
+                .then(markdownText => {
+                    // Loại bỏ ký tự toán khối phức tạp đề phòng crash luồng render chính của trình duyệt
+                    let cleanMarkdown = markdownText.replace(/\$\$/g, '').replace(/\\text\{f\}/g, 'f');
+                    contentDiv.innerHTML = marked.parse(cleanMarkdown);
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = `<span style="color:#e74c3c; font-weight:bold;">Lỗi tải tài liệu:</span> Có thể file README.md chưa nằm cùng thư mục hoặc viết sai ký tự hoa thường trên Repo GitHub.`;
+                });
+        }
+
         function init3D() {
             const container = document.getElementById('canvas3d');
             scene = new THREE.Scene();
@@ -301,7 +333,6 @@
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(container.clientWidth, container.clientHeight);
             renderer.shadowMap.enabled = true;
-            renderer.outputEncoding = THREE.sRGBEncoding; 
             container.appendChild(renderer.domElement);
 
             controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -314,25 +345,13 @@
 
             const mainLight = new THREE.DirectionalLight(0xffffff, 1.3); 
             mainLight.position.set(10, 18, 12);
-            mainLight.castShadow = true;
-            mainLight.shadow.mapSize.width = 2048;
-            mainLight.shadow.mapSize.height = 2048;
             scene.add(mainLight);
-
-            const fillLight = new THREE.DirectionalLight(0xffffff, 0.6); 
-            fillLight.position.set(-12, 8, -10);
-            scene.add(fillLight);
-
-            const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444455, 0.5); 
-            hemiLight.position.set(0, 20, 0);
-            scene.add(hemiLight);
 
             const gridHelper = new THREE.GridHelper(30, 30, 0x444444, 0x222222);
             gridHelper.position.y = -8; 
             scene.add(gridHelper);
 
             document.getElementById('seg1Len').addEventListener('input', updateSystem);
-
             defaultSegments.forEach(seg => addSegmentRow(seg.dir, seg.len));
 
             document.getElementById('dDish').addEventListener('input', updateSystem);
@@ -384,27 +403,11 @@
                 tooltip.style.top = (event.clientY - 15) + 'px';
 
                 if (hitObj.userData.type === 'pipe') {
-                    let tankStatusText = "";
-                    if (hitObj.userData.inTank) {
-                        tankStatusText = `<br><span style="color:#3498db; font-weight:bold;">[ Ngâm trong bể nước giải nhiệt ]</span>`;
-                    }
-                    tooltip.innerHTML = `
-                        <div class="tt-title">${hitObj.userData.name}</div>
-                        Chiều dài: <span class="tt-val">${hitObj.userData.length.toFixed(1)} m</span><br>
-                        Nhiệt độ vỏ ống: <span class="tt-val">${Math.round(hitObj.userData.tempLoss)} °C</span>${tankStatusText}
-                    `;
+                    tooltip.innerHTML = `<strong>${hitObj.userData.name}</strong><br>Dài: ${hitObj.userData.length.toFixed(1)} m<br>Nhiệt độ: ${Math.round(hitObj.userData.tempLoss)} °C`;
                 } else if (hitObj.userData.type === 'mirror') {
-                    tooltip.innerHTML = `
-                        <div class="tt-title" style="color:#2ecc71;">${hitObj.userData.name}</div>
-                        Nhiệt độ lõi gương: <span class="tt-val" style="color:#e67e22;">${Math.round(hitObj.userData.temperature)} °C</span><br>
-                        Hệ số quang học: <span class="tt-val">Phản xạ phẳng 95%</span>
-                    `;
+                    tooltip.innerHTML = `<strong>Gương góc</strong><br>Nhiệt độ: ${Math.round(hitObj.userData.temperature)} °C`;
                 } else if (hitObj.userData.type === 'dish') {
-                    tooltip.innerHTML = `
-                        <div class="tt-title" style="color:#d4af37;">Đĩa Parabol Hội Tụ Năng Lượng</div>
-                        Diện tích hữu dụng: <span class="tt-val">${hitObj.userData.area.toFixed(2)} m²</span><br>
-                        Độ phản xạ bề mặt: <span class="tt-val">88% (Mạ Crom/Bạc)</span>
-                    `;
+                    tooltip.innerHTML = `<strong>Đĩa Parabol</strong><br>Diện tích hiệu dụng: ${hitObj.userData.area.toFixed(2)} m²`;
                 }
             } else {
                 tooltip.style.display = 'none';
@@ -457,8 +460,6 @@
             } else {
                 tankPanel.style.display = 'none';
                 document.getElementById('enableTank').checked = false;
-                document.getElementById('tankControls').style.display = 'none';
-                document.getElementById('tankResults').style.display = 'none';
             }
         }
 
@@ -466,11 +467,8 @@
             obj.children.forEach(child => disposeHierarchy(child));
             if (obj.geometry) obj.geometry.dispose();
             if (obj.material) {
-                if (Array.isArray(obj.material)) {
-                    obj.material.forEach(mat => mat.dispose());
-                } else {
-                    obj.material.dispose();
-                }
+                if (Array.isArray(obj.material)) obj.material.forEach(mat => mat.dispose());
+                else obj.material.dispose();
             }
         }
 
@@ -488,41 +486,28 @@
 
         function createParabolicGeometry(dOuter, dInner, f, segments = 40) {
             const geometry = new THREE.BufferGeometry();
-            const vertices = [];
-            const indices = [];
-            const uvs = [];
-
-            const rMin = dInner / 2;
-            const rMax = dOuter / 2;
+            const vertices = []; const indices = []; const uvs = [];
+            const rMin = dInner / 2; const rMax = dOuter / 2;
 
             for (let i = 0; i <= segments; i++) {
                 const r = rMin + (i / segments) * (rMax - rMin);
                 const y = (r * r) / (4 * f);
-                
                 for (let j = 0; j <= segments; j++) {
                     const theta = (j / segments) * Math.PI * 2;
-                    const x = r * Math.cos(theta);
-                    const z = r * Math.sin(theta);
-                    
-                    vertices.push(x, y, z);
+                    vertices.push(r * Math.cos(theta), y, r * Math.sin(theta));
                     uvs.push(i / segments, j / segments);
                 }
             }
-
             for (let i = 0; i < segments; i++) {
                 for (let j = 0; j < segments; j++) {
-                    const row1 = i * (segments + 1);
-                    const row2 = (i + 1) * (segments + 1);
-
+                    const row1 = i * (segments + 1); const row2 = (i + 1) * (segments + 1);
                     indices.push(row1 + j, row2 + j, row1 + j + 1);
                     indices.push(row2 + j, row2 + j + 1, row1 + j + 1);
                 }
             }
-
             geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
             geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-            geometry.setIndex(indices);
-            geometry.computeVertexNormals();
+            geometry.setIndex(indices); geometry.computeVertexNormals();
             return geometry;
         }
 
@@ -544,48 +529,37 @@
             if (dishGroup) { scene.remove(dishGroup); disposeHierarchy(dishGroup); }
             if (finalPotMesh) { scene.remove(finalPotMesh); disposeHierarchy(finalPotMesh); }
             if (tankMesh) { scene.remove(tankMesh); disposeHierarchy(tankMesh); }
-            
             pipeMeshes.forEach(p => scene.remove(p));
             mirrorMeshes.forEach(m => scene.remove(m));
-            pipeMeshes = [];
-            mirrorMeshes = [];
+            pipeMeshes = []; mirrorMeshes = [];
 
+            // 1. DỰNG ĐĨA PARABOL MÀU VÀNG ÁNH KIM PHẢN CHIẾU MẠNH (ĐÃ KHÔI PHỤC)
             dishGroup = new THREE.Group();
-            
             const dishGeom = createParabolicGeometry(D, d_h, f, 40);
             const dishMat = new THREE.MeshStandardMaterial({ 
                 color: 0xd4af37, 
-                metalness: 0.95, 
-                roughness: 0.05, 
+                metalness: 1.0,        // Đạt tính kim loại tuyệt đối
+                roughness: 0.08,       // Rất bóng để tạo hiệu ứng phản xạ gương kính tốt
                 side: THREE.DoubleSide 
             });
-            
             dishMesh = new THREE.Mesh(dishGeom, dishMat);
             const A_eff = (Math.PI / 4) * (Math.pow(D, 2) - Math.pow(d_h, 2));
             dishMesh.userData = { type: 'dish', area: A_eff };
             dishGroup.add(dishMesh);
-
-            const focalPointMesh = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), new THREE.MeshBasicMaterial({ color: 0xffaa00 }));
-            focalPointMesh.position.set(0, f, 0); 
-            dishGroup.add(focalPointMesh);
 
             const dishHeightY = 5.0; 
             dishGroup.position.set(0, dishHeightY, 0);
             scene.add(dishGroup);
 
             const startPoint = new THREE.Vector3(0, dishHeightY + f, 0);
-            const points = [startPoint];
-            const dHolePoint = new THREE.Vector3(0, dishHeightY, 0);
-            points.push(dHolePoint);
-
+            const points = [startPoint, new THREE.Vector3(0, dishHeightY, 0)];
             const rows = document.getElementById('segmentsContainer').querySelectorAll('.segment-row');
-            let currentPos = dHolePoint.clone();
+            let currentPos = points[1].clone();
 
             rows.forEach(row => {
                 const dirSelect = row.querySelector('.seg-dir');
                 const dir = dirSelect.disabled ? 'down' : dirSelect.value;
                 const length = parseFloat(row.querySelector('.seg-len').value) || 0;
-                
                 const nextPos = currentPos.clone();
                 if (dir === 'up') nextPos.y += length;
                 else if (dir === 'down') nextPos.y -= length;
@@ -613,203 +587,95 @@
             let totalTankPowerLoss = 0; 
 
             if (rows.length >= 2) {
-                // ĐÃ GỠ BỎ TOÀN BỘ LOGIC TỰ ĐỘNG ÉP BUỘC MIN THEO ĐOẠN 2
-                let inputL = parseFloat(document.getElementById('tankL').value);
-                let inputH = parseFloat(document.getElementById('tankH').value);
+                tankL = parseFloat(document.getElementById('tankL').value) || 0.1;
+                tankH = parseFloat(document.getElementById('tankH').value) || 0.1;
                 tankW = parseFloat(document.getElementById('tankW').value) || 1.5;
-
-                if (isNaN(inputL) || inputL < 0.1) { document.getElementById('tankL').value = "0.1"; inputL = 0.1; }
-                if (isNaN(inputH) || inputH < 0.1) { document.getElementById('tankH').value = "0.1"; inputH = 0.1; }
-
-                tankL = inputL;
-                tankH = inputH;
             }
 
             const P_in = I_solar * A_eff * 0.88; 
-            let currentPower = P_in;
-            let totalLength = 0;
-            let totalMirrors = 0;
+            let currentPower = P_in; let totalLength = 0; let totalMirrors = 0;
+            const T_amb = 30; const T_water = 30; 
 
-            for (let i = 1; i < points.length - 1; i++) {
-                const vIn = new THREE.Vector3().subVectors(points[i], points[i-1]).normalize();
-                const vOut = new THREE.Vector3().subVectors(points[i+1], points[i]).normalize();
-                if (vIn.dot(vOut) < 0.99) totalMirrors++;
-            }
-
-            const T_amb = 30; 
-            const T_water = 30; 
-
+            // 2. VÒNG LẶP DỰNG LUỒNG ỐNG FEED HORN TỰ PHÁT SÁNG RỰC RỠ THEO NHIỆT ĐỘ (ĐÃ KHÔI PHỤC)
             for (let i = 0; i < points.length - 1; i++) {
-                const pStart = points[i];
-                const pEnd = points[i + 1];
+                const pStart = points[i]; const pEnd = points[i + 1];
                 const distance = pStart.distanceTo(pEnd);
                 totalLength += distance;
-
                 let isInsideWater = tankEnabled && (i === 1 || i === 2); 
-                
-                let pipeLoss = 0;
-                let T_pipe_wall = T_amb;
+                let pipeLoss = isInsideWater ? currentPower * 0.12 * distance : currentPower * 0.025 * distance;
+                if(isInsideWater) totalTankPowerLoss += pipeLoss;
+                currentPower -= pipeLoss;
 
-                if (isInsideWater) {
-                    pipeLoss = currentPower * 0.12 * distance; 
-                    totalTankPowerLoss += pipeLoss; 
-                    currentPower -= pipeLoss;
-                    T_pipe_wall = T_water + (pipeLoss / (0.95 * (distance + 0.01))); 
-                } else {
-                    pipeLoss = currentPower * 0.025 * distance;
-                    currentPower -= pipeLoss;
-                    T_pipe_wall = T_amb + (pipeLoss / (0.15 * (distance + 0.01))); 
-                }
-
+                let T_pipe_wall = isInsideWater ? T_water + (pipeLoss / (0.95 * (distance + 0.01))) : T_amb + (pipeLoss / (0.15 * (distance + 0.01)));
                 const pipeColor = getThermalColor(T_pipe_wall, 30, 400);
 
                 if (distance > 0.001) {
                     const cylinderGeom = new THREE.CylinderGeometry(r_pipe_m, r_pipe_m, distance, 16);
-                    cylinderGeom.translate(0, distance / 2, 0);
-                    cylinderGeom.rotateX(Math.PI / 2);
-
-                    const cylinderMat = new THREE.MeshStandardMaterial({
-                        color: pipeColor,
-                        metalness: 0.95, 
-                        roughness: 0.15, 
-                        transparent: true,
-                        opacity: 0.9
-                    });
-
-                    const cylinderMesh = new THREE.Mesh(cylinderGeom, cylinderMat);
-                    cylinderMesh.position.copy(pStart);
-                    cylinderMesh.lookAt(pEnd);
+                    cylinderGeom.translate(0, distance / 2, 0); cylinderGeom.rotateX(Math.PI / 2);
                     
-                    cylinderMesh.userData = {
-                        type: 'pipe',
-                        name: i === 0 ? 'Ống thu quang Feed Horn đầu vào' : `Đoạn ống kết cấu tuyến ${i}`,
-                        length: distance,
-                        tempLoss: T_pipe_wall,
-                        inTank: isInsideWater
-                    };
-
-                    scene.add(cylinderMesh);
-                    pipeMeshes.push(cylinderMesh);
+                    // Thêm thuộc tính emissive giúp lõi ống dẫn quang luôn phát sáng rực rỡ
+                    const cylinderMesh = new THREE.Mesh(cylinderGeom, new THREE.MeshStandardMaterial({ 
+                        color: pipeColor, 
+                        metalness: 0.3,
+                        roughness: 0.2,
+                        emissive: pipeColor,       // Phát sáng đồng bộ với màu phổ nhiệt độ
+                        emissiveIntensity: 0.85    // Cường độ phát quang mạnh để làm nổi bật dòng chảy năng lượng
+                    }));
+                    
+                    cylinderMesh.position.copy(pStart); cylinderMesh.lookAt(pEnd);
+                    cylinderMesh.userData = { type: 'pipe', name: `Đoạn ống ${i}`, length: distance, tempLoss: T_pipe_wall };
+                    scene.add(cylinderMesh); pipeMeshes.push(cylinderMesh);
                 }
 
                 if (i > 0 && i < points.length - 1) {
                     const vIn = new THREE.Vector3().subVectors(points[i], points[i-1]).normalize();
                     const vOut = new THREE.Vector3().subVectors(points[i+1], points[i]).normalize();
-                    
-                    if (vIn.dot(vOut) < 0.99) { 
-                        const mirrorLoss = currentPower * 0.05;
-                        currentPower -= mirrorLoss;
-
+                    if (vIn.dot(vOut) < 0.99) {
+                        totalMirrors++;
+                        const mirrorLoss = currentPower * 0.05; currentPower -= mirrorLoss;
                         const T_mirror = T_amb + (mirrorLoss / (12 * (Math.PI * Math.pow(r_pipe_m * Math.sqrt(2), 2))));
                         const mirrorColor = getThermalColor(T_mirror, 30, 550);
-
                         const normal = new THREE.Vector3().subVectors(vIn, vOut).normalize();
-                        const mirrorRadius = r_pipe_m * Math.sqrt(2);
                         
-                        const mirrorGeom = new THREE.CircleGeometry(mirrorRadius, 32);
-                        const mirrorMat = new THREE.MeshStandardMaterial({ 
+                        // Khôi phục hiệu ứng phát quang cho khớp nối gương phản xạ góc
+                        const mirrorMesh = new THREE.Mesh(new THREE.CircleGeometry(r_pipe_m * Math.sqrt(2), 32), new THREE.MeshStandardMaterial({ 
                             color: mirrorColor, 
-                            emissive: mirrorColor.clone().multiplyScalar(0.2), 
-                            metalness: 0.95, roughness: 0.05, side: THREE.DoubleSide 
-                        });
-                        const mirrorMesh = new THREE.Mesh(mirrorGeom, mirrorMat);
-                        mirrorMesh.position.copy(points[i]);
-                        mirrorMesh.lookAt(new THREE.Vector3().addVectors(points[i], normal));
-
-                        mirrorMesh.userData = {
-                            type: 'mirror',
-                            name: `Gương phản xạ chéo góc khúc khuỷu`,
-                            temperature: T_mirror
-                        };
-                        scene.add(mirrorMesh);
-                        mirrorMeshes.push(mirrorMesh);
-
-                        const glowRadius = mirrorRadius * 1.2;
-                        const glowGeom = new THREE.RingGeometry(mirrorRadius, glowRadius, 32);
-                        const glowMat = new THREE.MeshBasicMaterial({
-                            color: mirrorColor, side: THREE.DoubleSide, transparent: true, opacity: 0.45 
-                        });
-                        const glowMesh = new THREE.Mesh(glowGeom, glowMat);
-                        glowMesh.position.copy(points[i]);
-                        glowMesh.lookAt(new THREE.Vector3().addVectors(points[i], normal));
-                        glowMesh.position.addScaledVector(normal, 0.002); 
-                        scene.add(glowMesh);
-                        mirrorMeshes.push(glowMesh); 
+                            side: THREE.DoubleSide,
+                            emissive: mirrorColor,
+                            emissiveIntensity: 0.75
+                        }));
+                        
+                        mirrorMesh.position.copy(points[i]); mirrorMesh.lookAt(new THREE.Vector3().addVectors(points[i], normal));
+                        mirrorMesh.userData = { type: 'mirror', temperature: T_mirror };
+                        scene.add(mirrorMesh); mirrorMeshes.push(mirrorMesh);
                     }
                 }
             }
 
             if (tankEnabled) {
-                const tankGeom = new THREE.BoxGeometry(tankL, tankH, tankW);
-                const tankMat = new THREE.MeshStandardMaterial({
-                    color: 0x3498db,
-                    transparent: true,
-                    opacity: 0.40,  
-                    roughness: 0.1,
-                    metalness: 0.1
-                });
-                tankMesh = new THREE.Mesh(tankGeom, tankMat);
-                
-                const posSeg1 = points[2]; 
-                const posSeg2 = points[3]; 
-
-                const centerX = (posSeg1.x + posSeg2.x) / 2;
-                const centerZ = (posSeg1.z + posSeg2.z) / 2;
-
-                const bottomY = posSeg1.y - 0.3; 
-                const centerY = bottomY + (tankH / 2);
-
-                tankMesh.position.set(centerX, centerY, centerZ);
+                tankMesh = new THREE.Mesh(new THREE.BoxGeometry(tankL, tankH, tankW), new THREE.MeshStandardMaterial({ color: 0x3498db, transparent: true, opacity: 0.35 }));
+                tankMesh.position.set((points[2].x + points[3].x)/2, (points[2].y - 0.3) + tankH/2, (points[2].z + points[3].z)/2);
                 scene.add(tankMesh);
-
-                const volumeM3 = tankL * tankH * tankW; 
-                const volumeLiters = volumeM3 * 1000; 
-                const deltaT = 100 - T_water; 
-                const energyRequiredJ = volumeLiters * 4186 * deltaT; 
-
-                document.getElementById('res_tankVol').innerText = Math.round(volumeLiters) + " Lít (" + volumeM3.toFixed(2) + " m³)";
+                document.getElementById('res_tankVol').innerText = Math.round(tankL * tankH * tankW * 1000) + " Lít";
                 document.getElementById('res_tankPower').innerText = Math.round(totalTankPowerLoss);
-
-                if (totalTankPowerLoss > 10) {
-                    const timeToBoilSeconds = energyRequiredJ / totalTankPowerLoss;
-                    const timeToBoilHours = timeToBoilSeconds / 3600;
-
-                    if (timeToBoilHours > 48) {
-                        document.getElementById('res_timeToBoil').innerText = "Rất an toàn (Trên 48 tiếng)";
-                        document.getElementById('res_timeToBoil').style.color = "#2ecc71";
-                    } else {
-                        document.getElementById('res_timeToBoil').innerText = timeToBoilHours.toFixed(1) + " giờ liên tục";
-                        document.getElementById('res_timeToBoil').style.color = "#e74c3c";
-                    }
-                } else {
-                    document.getElementById('res_timeToBoil').innerText = "Không thể sôi (Nhiệt hấp thụ quá thấp)";
-                    document.getElementById('res_timeToBoil').style.color = "#2ecc71";
-                }
             }
 
-            const potGeom = new THREE.CylinderGeometry(r_pipe_m * 2, r_pipe_m * 2, 0.25, 16);
-            const potMat = new THREE.MeshStandardMaterial({ color: 0xff0000, emissive: 0x440000, roughness: 0.4, metalness: 0.2 });
-            finalPotMesh = new THREE.Mesh(potGeom, potMat);
-            finalPotMesh.position.copy(endPoint);
-            scene.add(finalPotMesh);
+            // Dựng nồi nấu đầu cuối ở trạng thái nung nhiệt đỏ rực
+            finalPotMesh = new THREE.Mesh(new THREE.CylinderGeometry(r_pipe_m * 2, r_pipe_m * 2, 0.25, 16), new THREE.MeshStandardMaterial({ 
+                color: 0xff0000,
+                emissive: 0xbdc3c7,
+                emissiveIntensity: 0.2
+            }));
+            finalPotMesh.position.copy(endPoint); scene.add(finalPotMesh);
 
-            const A_pot = (Math.PI / 4) * Math.pow(r_pipe_m * 2, 2); 
-            let T_cook = T_amb + (currentPower / (15 * A_pot * 1.2)); 
-            if(T_cook > 750) T_cook = 750;
-            if(currentPower < 5) T_cook = T_amb;
-
+            let T_cook = T_amb + (currentPower / (15 * ((Math.PI / 4) * Math.pow(r_pipe_m * 2, 2)) * 1.2));
             document.getElementById('res_totalLength').innerText = totalLength.toFixed(1);
             document.getElementById('res_mirrorCount').innerText = totalMirrors;
             document.getElementById('res_pOut').innerText = Math.round(currentPower);
-            document.getElementById('res_temp').innerText = Math.round(T_cook);
+            document.getElementById('res_temp').innerText = Math.round(T_cook > 750 ? 750 : T_cook);
         }
 
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-
+        function animate() { requestAnimationFrame(animate); controls.update(); renderer.render(scene, camera); }
         window.onload = init3D;
     </script>
 </body>
