@@ -56,6 +56,11 @@ Thông qua việc áp dụng các công thức nhiệt động lực học chín
 
 ## Getting Started / Hướng dẫn Chạy Dự Án
 
-1. Clone this repository to your local machine:
+1. Clone this repository to your local machine / Sao chép kho lưu trữ này về máy tính của bạn:
    ```bash
-   git clone [https://doanthanhhungwork1-creator.github.io/SolSim3D.git](https://doanthanhhungwork1-creator.github.io/SolSim3D.git)
+   git clone [https://github.com/doanthanhhungwork1-creator/SolSim3D.git](https://github.com/doanthanhhungwork1-creator/SolSim3D.git)
+2. Open the index.html file directly in any modern web browser (Chrome, Edge, Firefox, Safari). No heavy node servers or build tools required.
+(Mở trực tiếp file index.html bằng bất kỳ trình duyệt web hiện đại nào. Không cần cài đặt máy chủ Node hay công cụ đóng gói phức tạp).
+
+3. Adjust the configurations on the right-hand panel to validate your physical hardware designs.
+(Tùy chỉnh các tham số ở bảng điều khiển bên phải để kiểm nghiệm thiết kế phần cứng thực tế của bạn).
